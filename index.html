@@ -749,25 +749,36 @@ function pauseVideo(slide){
   }
 }
 
-function preloadAdjacentVideos(currentIndex) {
-  // Preload next slide
-  if (currentIndex + 1 < total) {
-    loadVideo(slides[currentIndex + 1]);
-  }
-  // Preload previous slide (optional, but good for going backwards)
-  if (currentIndex - 1 >= 0) {
-    loadVideo(slides[currentIndex - 1]);
-  }
+function manageVideos(currentIndex) {
+  slides.forEach((slide, idx) => {
+    const vid = slide.querySelector('.bg-video-wrap video');
+    if(!vid) return;
+
+    if (Math.abs(idx - currentIndex) <= 1) {
+      // Keep Current, Previous, and Next loaded
+      if (!vid.src && vid.dataset.src) {
+        vid.src = vid.dataset.src;
+        vid.load();
+      }
+    } else {
+      // More than 1 slide away: unload to save memory and decode limits
+      if (vid.src) {
+        vid.pause();
+        vid.removeAttribute('src');
+        vid.load();
+      }
+    }
+  });
 }
 
 // Ensure active slide video plays on load and preload next
 window.addEventListener('DOMContentLoaded', ()=>{
   forcePlayVideo(document.querySelector('.slide.active'));
-  preloadAdjacentVideos(0);
+  manageVideos(0);
 });
 window.addEventListener('load', ()=>{
   forcePlayVideo(document.querySelector('.slide.active'));
-  preloadAdjacentVideos(0);
+  manageVideos(0);
 });
 
 // Single fallback for the active slide on first interaction
@@ -810,7 +821,8 @@ function goTo(i){
       {y:0, opacity:1, stagger:0.07, duration:0.7, ease:'power3.out'}
     );
     cur=i; updateUI();
-    preloadAdjacentVideos(cur); // Preload videos for the new adjacent slides
+    manageVideos(cur); // Load adjacent videos and unload the rest
+
     setTimeout(()=>{ animating=false; }, 600);
   });
 }
