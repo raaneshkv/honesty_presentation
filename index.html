@@ -709,15 +709,25 @@ function triggerBurnTransition(callback){
 }
 
 // =============================================
-// FORCE VIDEO PLAYBACK (robust)
+// FORCE VIDEO PLAYBACK & PRELOADING
 // =============================================
-function forcePlayVideo(slide){
+function loadVideo(slide) {
+  if (!slide) return;
   const vid = slide.querySelector('.bg-video-wrap video');
   if(!vid) return;
   if (!vid.src && vid.dataset.src) {
     vid.src = vid.dataset.src;
     vid.load();
   }
+}
+
+function forcePlayVideo(slide){
+  const vid = slide.querySelector('.bg-video-wrap video');
+  if(!vid) return;
+  
+  // Ensure the video is loaded
+  loadVideo(slide);
+  
   vid.muted = true;
   vid.playsInline = true;
   vid.loop = true;
@@ -729,21 +739,35 @@ function forcePlayVideo(slide){
     });
   }
 }
+
 function pauseVideo(slide){
   const vid = slide.querySelector('.bg-video-wrap video');
   if(vid) {
     vid.pause();
-    vid.removeAttribute('src');
-    vid.load();
+    // REMOVED: vid.removeAttribute('src') and vid.load()
+    // We want to keep the video buffered in memory for faster playback if they go back.
   }
 }
 
-// Ensure active slide video plays on load
+function preloadAdjacentVideos(currentIndex) {
+  // Preload next slide
+  if (currentIndex + 1 < total) {
+    loadVideo(slides[currentIndex + 1]);
+  }
+  // Preload previous slide (optional, but good for going backwards)
+  if (currentIndex - 1 >= 0) {
+    loadVideo(slides[currentIndex - 1]);
+  }
+}
+
+// Ensure active slide video plays on load and preload next
 window.addEventListener('DOMContentLoaded', ()=>{
   forcePlayVideo(document.querySelector('.slide.active'));
+  preloadAdjacentVideos(0);
 });
 window.addEventListener('load', ()=>{
   forcePlayVideo(document.querySelector('.slide.active'));
+  preloadAdjacentVideos(0);
 });
 
 // Single fallback for the active slide on first interaction
@@ -786,6 +810,7 @@ function goTo(i){
       {y:0, opacity:1, stagger:0.07, duration:0.7, ease:'power3.out'}
     );
     cur=i; updateUI();
+    preloadAdjacentVideos(cur); // Preload videos for the new adjacent slides
     setTimeout(()=>{ animating=false; }, 600);
   });
 }
