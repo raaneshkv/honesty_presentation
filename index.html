@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Truth on Trial — Ethics Seminar by RAANESH K V</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,700&display=swap');
+
+:root {
+  --gold: #d4af37;
+  --gold-light: #f0d87a;
+  --gold-dark: #a6862f;
+  --bg: #030303;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; cursor: none; }
+
+/* === CUSTOM CURSOR === */
+#cursor-dot { width: 8px; height: 8px; background: var(--gold); border-radius: 50%; position: fixed; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.25s, height 0.25s, opacity 0.25s; }
+#cursor-ring { width: 40px; height: 40px; border: 1.5px solid rgba(212,175,55,0.4); border-radius: 50%; position: fixed; pointer-events: none; z-index: 99998; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s; }
+.hover-active #cursor-ring { width: 65px; height: 65px; background: rgba(212,175,55,0.08); border-color: var(--gold); }
+.hover-active #cursor-dot { width: 0; height: 0; opacity: 0; }
+
+/* === FLOATING PARTICLES === */
+.particles-container { position: fixed; inset: 0; z-index: 15; pointer-events: none; overflow: hidden; }
+.particle {
+  position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(212,175,55,0.6), transparent 70%);
+  animation: floatParticle linear infinite; opacity: 0;
+}
+@keyframes floatParticle {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-20vh) scale(1); opacity: 0; }
+}
+
+/* === SLIDE SYSTEM === */
+.slide-container { position: relative; width: 100vw; height: 100vh; }
+.slide {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  visibility: hidden; opacity: 0; z-index: 1; overflow: hidden; background: #000;
+}
+.slide.active { visibility: visible; opacity: 1; z-index: 10; }
+
+/* === VIDEO BG === */
+.bg-video-wrap { position: absolute; inset: 0; z-index: -2; overflow: hidden; }
+.bg-video-wrap video { width: 100%; height: 100%; object-fit: cover; transform: scale(1.08); }
+.bg-overlay {
+  position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(180deg, rgba(3,3,3,0.25) 0%, rgba(3,3,3,0.6) 40%, rgba(3,3,3,0.92) 100%);
+}
+.bg-overlay-red {
+  position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(180deg, rgba(40,0,0,0.4) 0%, rgba(10,0,0,0.85) 100%);
+}
+
+/* === GLASS === */
+.glass {
+  background: rgba(8,8,8,0.5); backdrop-filter: blur(24px) saturate(1.3); -webkit-backdrop-filter: blur(24px) saturate(1.3);
+  border: 1px solid rgba(212,175,55,0.12);
+  transition: border-color 0.4s, box-shadow 0.5s, background 0.4s, transform 0.4s;
+}
+.glass:hover {
+  border-color: rgba(212,175,55,0.45);
+  box-shadow: 0 8px 40px rgba(212,175,55,0.12), inset 0 0 30px rgba(212,175,55,0.03);
+  background: rgba(212,175,55,0.04);
+}
+
+/* === TEXT EFFECTS === */
+.gold-text {
+  background: linear-gradient(135deg, #f0d87a 0%, #d4af37 40%, #e8c848 70%, #c8a23c 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.gold-glow { filter: drop-shadow(0 0 20px rgba(212,175,55,0.3)); }
+.font-display { font-family: 'Playfair Display', serif; }
+.font-body { font-family: 'Inter', sans-serif; }
+.font-elegant { font-family: 'Cormorant Garamond', serif; }
+.font-tamil { font-family: 'Noto Sans Tamil', sans-serif; }
+
+/* === TYPING CURSOR for key quotes === */
+.type-cursor::after {
+  content: '|'; animation: blink 1s step-end infinite; color: var(--gold); font-weight: 300;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* === NAV === */
+.nav-btn {
+  position: fixed; top: 50%; transform: translateY(-50%); z-index: 50;
+  width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(212,175,55,0.15); background: rgba(5,5,5,0.4); backdrop-filter: blur(12px);
+  color: rgba(255,255,255,0.8); transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.nav-btn:hover {
+  background: rgba(212,175,55,0.12); border-color: rgba(212,175,55,0.6);
+  transform: translateY(-50%) scale(1.15); box-shadow: 0 0 30px rgba(212,175,55,0.15); color: #fff;
+}
+#prevBtn { left: 24px; } #nextBtn { right: 24px; }
+
+#slideProgress { position: fixed; bottom: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light)); z-index: 50; transition: width 0.7s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 0 12px rgba(212,175,55,0.4); }
+#slideCounter { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 50; font-size: 0.7rem; letter-spacing: 0.35em; color: rgba(212,175,55,0.7); text-transform: uppercase; font-family: 'Inter', sans-serif; }
+
+/* === TILT === */
+.tilt-card { transform-style: preserve-3d; will-change: transform; }
+.tilt-inner { transform: translateZ(30px); }
+
+/* === GLITCH for pivot slide === */
+.glitch-text { position: relative; }
+.glitch-text::before, .glitch-text::after {
+  content: attr(data-text); position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+}
+.glitch-text::before { animation: glitch1 3s infinite linear; clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%); color: #ef4444; }
+.glitch-text::after { animation: glitch2 3s infinite linear; clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%); color: #3b82f6; }
+@keyframes glitch1 { 0%, 93% { transform: none; } 94% { transform: translate(-3px, -1px); } 95% { transform: translate(3px, 1px); } 96% { transform: none; } }
+@keyframes glitch2 { 0%, 93% { transform: none; } 94% { transform: translate(3px, 1px); } 95% { transform: translate(-3px, -1px); } 96% { transform: none; } }
+
+/* === PULSE BORDER === */
+.pulse-border { animation: pulseBorder 2s ease-in-out infinite; }
+@keyframes pulseBorder {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212,175,55,0.2); }
+  50% { box-shadow: 0 0 0 8px rgba(212,175,55,0); }
+}
+
+/* === NOISE === */
+body::after {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* === UTILITIES === */
+.tracking-mega { letter-spacing: 0.5em; }
+.tracking-wide { letter-spacing: 0.3em; }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- Floating Particles -->
+<div class="particles-container" id="particles"></div>
+
+<!-- Transition Canvas -->
+<canvas id="transition-canvas" style="position:fixed;inset:0;width:100%;height:100%;z-index:200;pointer-events:none;display:none;"></canvas>
+
+<!-- UI -->
+<div id="slideProgress" style="width:5.8%"></div>
+<div id="slideCounter">01 / 17</div>
+<button id="prevBtn" class="nav-btn hover-target" onclick="prevSlide()" style="display:none;">
+  <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 17l-5-5 5-5"/></svg>
+</button>
+<button id="nextBtn" class="nav-btn hover-target" onclick="nextSlide()">
+  <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 17l5-5-5-5"/></svg>
+</button>
+
+<div class="slide-container">
+
+  <!-- ===== SLIDE 1: HERO ===== -->
+  <div class="slide active" id="slide1">
+    <div class="bg-video-wrap"><video autoplay muted loop playsinline preload="none" data-src="butterfly.mp4"></video></div>
+    <div class="bg-overlay"></div>
+    <div style="position:relative;z-index:10;" class="text-center" style="padding:0 1.5rem; max-width:64rem; margin:auto;">
+      <div style="width:64px;height:64px;margin:0 auto 2rem;border-radius:50%;border:1px solid rgba(212,175,55,0.25);display:flex;align-items:center;justify-content:center;">
+        <div style="width:8px;height:8px;background:var(--gold);border-radius:50%;animation:ping 1.5s cubic-bezier(0,0,0.2,1) infinite;"></div>
+      </div>
+      <p class="slide-el" style="color:rgba(212,175,55,0.8);font-size:0.65rem;letter-spacing:0.5em;text-transform:uppercase;margin-bottom:1.5rem;">Ethics Seminar • 2026</p>
+      <h1 class="font-display slide-el" style="font-size:clamp(3rem,8vw,6rem);font-weight:800;line-height:1.1;margin-bottom:1.5rem;">
+        Truth on <span class="gold-text gold-glow">Trial</span>
+      </h1>
+      <p class="font-elegant slide-el" style="font-size:clamp(1.2rem,3vw,1.8rem);color:rgba(200,200,200,0.9);font-style:italic;margin-bottom:3rem;">Is honesty always right?</p>
+      <div class="glass pulse-border hover-target slide-el" style="border-radius:9999px;padding:1rem 2.5rem;display:inline-block;margin-bottom:3rem;">
+        <p style="color:var(--gold-light);font-size:1rem;" class="font-body">"What if telling the truth hurts someone, and a lie saves them?"</p>
+      </div>
+      <p class="slide-el" style="color:rgba(150,150,150,0.8);font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;">Presented by <span style="color:var(--gold);font-weight:600;">RAANESH K V</span></p>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 2: OPENING QUESTIONS ===== -->
+  <div class="slide" id="slide2">
+    <div class="bg-video-wrap"><video autoplay muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260629_021419_291eb2af-5ed4-45a0-a1d6-3ef58f4bca0b.mp4"></video></div>
+    <div class="bg-overlay"></div>
+    <div style="position:relative;z-index:10;width:100%;max-width:72rem;padding:0 1.5rem;margin:auto;">
+      <p class="slide-el" style="text-align:center;color:var(--gold);font-size:0.65rem;letter-spacing:0.5em;text-transform:uppercase;margin-bottom:3rem;">Opening Arguments</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;">
+        <div class="glass hover-target tilt-card slide-el" style="border-radius:1.5rem;padding:2.5rem;text-align:center;">
+          <div class="tilt-inner">
+            <span class="font-display gold-text" style="font-size:2.5rem;display:block;margin-bottom:1.5rem;opacity:0.4;">I</span>
+            <p class="font-display" style="font-size:1.4rem;line-height:1.5;color:#fff;">Is truth valuable<br><span class="gold-text">even when it causes harm?</span></p>
+          </div>
+        </div>
+        <div class="glass hover-target tilt-card slide-el" style="border-radius:1.5rem;padding:2.5rem;text-align:center;">
+          <div class="tilt-inner">
+            <span class="font-display gold-text" style="font-size:2.5rem;display:block;margin-bottom:1.5rem;opacity:0.4;">II</span>
+            <p class="font-display" style="font-size:1.4rem;line-height:1.5;color:#fff;">Can a lie become<br><span class="gold-text">ethical if it protects?</span></p>
+          </div>
+        </div>
+        <div class="glass hover-target tilt-card slide-el" style="border-radius:1.5rem;padding:2.5rem;text-align:center;">
+          <div class="tilt-inner">
+            <span class="font-display gold-text" style="font-size:2.5rem;display:block;margin-bottom:1.5rem;opacity:0.4;">III</span>
+            <p class="font-display" style="font-size:1.4rem;line-height:1.5;color:#fff;">Is honesty about<br><span class="gold-text">facts or consequences?</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 3: KURAL 1 ===== -->
+  <div class="slide" id="slide3">
+    <div class="bg-video-wrap"><video autoplay muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260424_064411_9e9d7f84-9277-41f4-ab10-59172d89e6be.mp4"></video></div>
+    <div class="bg-overlay"></div>
+    <div style="position:relative;z-index:10;max-width:60rem;padding:0 1.5rem;margin:auto;text-align:center;">
+      <p class="slide-el" style="color:var(--gold);font-size:0.65rem;letter-spacing:0.4em;text-transform:uppercase;margin-bottom:3rem;">Exhibit A — Thirukkural</p>
+      <div class="glass hover-target tilt-card slide-el" style="border-radius:2rem;padding:3.5rem;">
+        <div class="tilt-inner">
+          <p class="font-tamil slide-el" style="font-size:clamp(1.2rem, 3vw, 2.2rem);white-space:nowrap;color:var(--gold-light);line-height:1.9;margin-bottom:2.5rem;">
+            உள்ளத்தாற் பொய்யா தொழுகின் உலகத்தார்<br>உள்ளத்து ளெல்லாம் உளன்.
+          </p>
+          <div style="width:6rem;height:1px;background:rgba(212,175,55,0.25);margin:0 auto 2.5rem;"></div>
+          <p class="font-elegant slide-el" style="font-size:1.6rem;color:rgba(220,220,220,0.9);font-style:italic;margin-bottom:2.5rem;line-height:1.6;">
+            "If a person lives without falsehood in the heart,<br>they live in the hearts of all people."
+          </p>
+          <p class="font-body slide-el" style="color:rgba(160,160,160,0.9);font-size:1rem;line-height:1.7;max-width:36rem;margin:0 auto;">
+            Honesty is not just about words — it begins in the mind and character. Inner truthfulness radiates outward, earning lasting trust.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 4: WHY HONESTY MATTERS ===== -->
+  <div class="slide" id="slide4">
+    <div class="bg-video-wrap"><video autoplay muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_080203_fd7f4f85-3a86-4837-8192-85e7bfe68e75.mp4"></video></div>
+    <div class="bg-overlay"></div>
+    <div style="position:relative;z-index:10;width:100%;max-width:72rem;padding:0 1.5rem;margin:auto;">
+      <h2 class="font-display slide-el" style="font-size:clamp(2.5rem,5vw,3.5rem);font-weight:700;text-align:center;margin-bottom:3rem;">Why Honesty <span class="gold-text">Matters</span></h2>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+        <div class="glass hover-target tilt-card slide-el" style="border-radius:1rem;padding:1.8rem;text-align:center;"><div class="tilt-inner"><div style="width:3rem;height:3rem;background:rgba(212,175,55,0.08);border-radius:50%;margin:0 auto 0.8rem;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">🛡️</div><h3 class="font-display" style="font-size:1.1rem;color:#fff;margin-bottom:0.4rem;">Builds Trust</h3><p class="font-body" style="color:rgba(160,160,160,0.9);font-size:0.8rem;">The invisible thread holding relationships together.</p></div></div>
+        <div class="glass hover-target tilt-card slide-el" style="border-radius:1rem;padding:1.8rem;text-align:center;"><div class="tilt-inner"><div style="width:3rem;height:3rem;background:rgba(212,175,55,0.08);border-radius:50%;margin:0 auto 0.8rem;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">⭐</div><h3 class="font-display" style="font-size:1.1rem;color:#fff;margin-bottom:0.4rem;">Creates Credibility</h3><p class="font-body" style="color:rgba(160,160,160,0.9);font-size:0.8rem;">Reputation is built brick by brick through honest actions.</p></div></div>
+        <div class="glass hover-target tilt-card slide-el" style="border-radius:1rem;padding:1.8rem;text-align:center;"><div class="tilt-inner"><div style="width:3rem;height:3rem;background:rgba(212,175,55,0.08);border-radius:50%;margin:0 auto 0.8rem;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">⚖️</div><h3 class="font-display" style="font-size:1.1rem;color:#fff;margin-bottom:0.4rem;">Prevents Corruption</h3><p class="font-body" style="color:rgba(160,160,160,0.9);font-size:0.8rem;">The immune system of a functioning society.</p></div></div>
+        <div class="glass hover-target tilt-card slide-el" style="border-radius:1rem;padding:1.8rem;text-align:center;"><div class="tilt-inner"><div style="width:3rem;height:3rem;background:rgba(212,175,55,0.08);border-radius:50%;margin:0 auto 0.8rem;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">🧘</div><h3 class="font-display" style="font-size:1.1rem;color:#fff;margin-bottom:0.4rem;">Peace of Mind</h3><p class="font-body" style="color:rgba(160,160,160,0.9);font-size:0.8rem;">Lies create anxiety; truth brings deep sleep.</p></div></div>
+        <div class="glass hover-target tilt-card slide-el" style="border-radius:1rem;padding:1.8rem;text-align:center;"><div class="tilt-inner"><div style="width:3rem;height:3rem;background:rgba(212,175,55,0.08);border-radius:50%;margin:0 auto 0.8rem;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">👑</div><h3 class="font-display" style="font-size:1.1rem;color:#fff;margin-bottom:0.4rem;">Enables Leadership</h3><p class="font-body" style="color:rgba(160,160,160,0.9);font-size:0.8rem;">No team follows a liar for very long.</p></div></div>
+        <div class="glass hover-target tilt-card slide-el" style="border-radius:1rem;padding:1.8rem;text-align:center;"><div class="tilt-inner"><div style="width:3rem;height:3rem;background:rgba(212,175,55,0.08);border-radius:50%;margin:0 auto 0.8rem;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">🛠️</div><h3 class="font-display" style="font-size:1.1rem;color:#fff;margin-bottom:0.4rem;">Professional Integrity</h3><p class="font-body" style="color:rgba(160,160,160,0.9);font-size:0.8rem;">In engineering and medicine, truth saves lives.</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 5: THE PIVOT (Honeybee + Glitch) ===== -->
+  <div class="slide" id="slide5">
+    <div class="bg-video-wrap"><video autoplay muted loop playsinline preload="none" data-src="honeybee.mp4"></video></div>
+    <div class="bg-overlay-red"></div>
+    <div style="position:relative;z-index:10;max-width:52rem;padding:0 1.5rem;margin:auto;text-align:center;">
+      <p class="slide-el" style="color:#ef4444;font-size:0.65rem;letter-spacing:0.5em;text-transform:uppercase;margin-bottom:1.5rem;">The Pivot</p>
+      <h2 class="font-display slide-el" style="font-size:clamp(2.5rem,6vw,4.2rem);font-weight:700;line-height:1.15;margin-bottom:3rem;">
+        But is honesty<br><span style="color:rgba(239,68,68,0.85);font-style:italic;">always the highest good?</span>
+      </h2>
+      <div class="glass hover-target tilt-card slide-el" style="border-radius:2rem;padding:3rem;border-color:rgba(239,68,68,0.15);">
+        <div class="tilt-inner">
+          <p class="font-body" style="color:rgba(220,220,220,0.9);font-size:1.15rem;line-height:1.7;margin-bottom:1.2rem;">
+            Honesty is powerful. But real ethical situations are messy, layered, and rarely black-and-white.
+          </p>
+          <p class="font-body" style="color:rgba(200,200,200,0.85);font-size:1.05rem;line-height:1.7;">
+            Sometimes truth may cause <span style="color:#ef4444;font-weight:600;">avoidable harm</span>, while a carefully chosen lie may protect <span class="gold-text" style="font-weight:600;">life, dignity, or well-being.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 6: KURAL 2 ===== -->
+  <div class="slide" id="slide6">
+    <div class="bg-video-wrap"><video autoplay muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_204103_f607742e-09da-4cf5-bb06-4e67b0a531de.mp4"></video></div>
+    <div class="bg-overlay"></div>
+    <div style="position:relative;z-index:10;max-width:60rem;padding:0 1.5rem;margin:auto;text-align:center;">
+      <p class="slide-el" style="color:var(--gold);font-size:0.65rem;letter-spacing:0.4em;text-transform:uppercase;margin-bottom:3rem;">Exhibit B — Thirukkural</p>
+      <div class="glass hover-target tilt-card slide-el" style="border-radius:2rem;padding:3.5rem;">
+        <div class="tilt-inner">
+          <p class="font-tamil slide-el" style="font-size:clamp(1.2rem, 3vw, 2.2rem);white-space:nowrap;color:var(--gold-light);line-height:1.9;margin-bottom:2.5rem;">
+            பொய்மையும் வாய்மை யிடத்த புரைதீர்ந்த<br>நன்மை பயக்கும் எனின்.
+          </p>
+          <div style="width:6rem;height:1px;background:rgba(212,175,55,0.25);margin:0 auto 2.5rem;"></div>
+          <p class="font-elegant slide-el" style="font-size:1.6rem;color:rgba(220,220,220,0.9);font-style:italic;margin-bottom:2.5rem;line-height:1.6;">
+            "Even a lie may take the place of truth<br>if it produces pure, faultless good."
+          </p>
+          <p class="font-body slide-el" style="color:rgba(160,160,160,0.9);font-size:1rem;line-height:1.7;max-width:36rem;margin:0 auto;">
+            This is not a license to lie, but a recognition that moral life demands wisdom. Only a lie that creates faultless good — without selfishness — can be ethically accepted.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 7: CASE 1 — The Killer at the Door ===== -->
+  <div class="slide" id="slide7">
+    <div class="bg-video-wrap"><video autoplay muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260611_183632_c311af08-e4b7-458f-81e7-79847a49b3d3.mp4"></video></div>
+    <div class="bg-overlay"></div>
+    <div style="position:relative;z-index:10;width:100%;max-width:72rem;padding:0 1.5rem;margin:auto;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;">
+        <div class="glass slide-el" style="border-radius:1.5rem;padding:2.5rem;">
+          <span class="font-body" style="color:var(--gold);font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;display:block;margin-bottom:1rem;">CASE STUDY 01</span>
+          <h2 class="font-display" style="font-size:2.2rem;font-weight:700;color:#fff;margin-bottom:1.5rem;">🚪 The Killer at the Door</h2>
+          <p class="font-body" style="color:rgba(200,200,200,0.9);font-size:1rem;line-height:1.7;margin-bottom:2rem;">A violent person asks where your friend is hiding. Telling the truth may get your friend killed.</p>
+          <div style="display:flex;flex-direction:column;gap:0.8rem;">
+            <button onclick="revealCaseVerdict(1)" class="glass hover-target" style="width:100%;text-align:left;border-radius:0.8rem;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;color:rgba(220,220,220,0.9);font-size:0.95rem;pointer-events:auto;cursor:pointer!important;position:relative;z-index:20;"><span>⚖️ Tell the truth</span><span style="color:var(--gold);font-size:0.6rem;font-family:monospace;">A</span></button>
+            <button onclick="revealCaseVerdict(1)" class="glass hover-target" style="width:100%;text-align:left;border-radius:0.8rem;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;color:rgba(220,220,220,0.9);font-size:0.95rem;pointer-events:auto;cursor:pointer!important;position:relative;z-index:20;"><span>🛡️ Lie to protect your friend</span><span style="color:var(--gold);font-size:0.6rem;font-family:monospace;">B</span></button>
+          </div>
+        </div>
+        <div id="verdict-container-1" class="glass slide-el" style="border-radius:1.5rem;padding:2.5rem;opacity:0;transform:translateX(40px);transition:all 0.7s cubic-bezier(0.4,0,0.2,1);border-left:4px solid var(--gold);">
+          <span class="font-body" style="color:var(--gold);font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;display:block;margin-bottom:1rem;">VERDICT</span>
+          <h3 class="font-display" style="font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:1rem;">Life Over Rigid Truth</h3>
+          <p class="font-body" style="color:rgba(200,200,200,0.85);font-size:0.95rem;line-height:1.7;">Here, lying protects innocent life. This is the strongest example where blind honesty becomes morally dangerous.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 8: CASE 2 — Doctor and Patient ===== -->
+  <div class="slide" id="slide8">
+    <div class="bg-video-wrap"><video autoplay muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260602_150901_c45b90ec-18d7-42ff-90e2-b95d7109e330.mp4"></video></div>
+    <div class="bg-overlay"></div>
+    <div style="position:relative;z-index:10;width:100%;max-width:72rem;padding:0 1.5rem;margin:auto;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;">
+        <div class="glass slide-el" style="border-radius:1.5rem;padding:2.5rem;">
+          <span class="font-body" style="color:var(--gold);font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;display:block;margin-bottom:1rem;">CASE STUDY 02</span>
+          <h2 class="font-display" style="font-size:2.2rem;font-weight:700;color:#fff;margin-bottom:1.5rem;">🏥 Doctor and Patient</h2>
+          <p class="font-body" style="color:rgba(200,200,200,0.9);font-size:1rem;line-height:1.7;margin-bottom:2rem;">A patient is seriously ill and mentally fragile. Should the doctor reveal the full harsh truth immediately or communicate it with compassion and timing?</p>
+          <div style="display:flex;flex-direction:column;gap:0.8rem;">
+            <button onclick="revealCaseVerdict(2)" class="glass hover-target" style="width:100%;text-align:left;border-radius:0.8rem;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;color:rgba(220,220,220,0.9);font-size:0.95rem;pointer-events:auto;cursor:pointer!important;position:relative;z-index:20;"><span>💔 Say the full truth immediately</span><span style="color:var(--gold);font-size:0.6rem;font-family:monospace;">A</span></button>
+            <button onclick="revealCaseVerdict(2)" class="glass hover-target" style="width:100%;text-align:left;border-radius:0.8rem;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;color:rgba(220,220,220,0.9);font-size:0.95rem;pointer-events:auto;cursor:pointer!important;position:relative;z-index:20;"><span>💛 Share truth gradually with care</span><span style="color:var(--gold);font-size:0.6rem;font-family:monospace;">B</span></button>
+          </div>
+        </div>
+        <div id="verdict-container-2" class="glass slide-el" style="border-radius:1.5rem;padding:2.5rem;opacity:0;transform:translateX(40px);transition:all 0.7s cubic-bezier(0.4,0,0.2,1);border-left:4px solid var(--gold);">
+          <span class="font-body" style="color:var(--gold);font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;display:block;margin-bottom:1rem;">VERDICT</span>
+          <h3 class="font-display" style="font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:1rem;">Truth with Empathy</h3>
+          <p class="font-body" style="color:rgba(200,200,200,0.85);font-size:0.95rem;line-height:1.7;">Honesty must be joined with empathy. The ethical approach is not hiding truth forever, but communicating truth responsibly.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 9: CASE 3 — Friend's Bad Performance ===== -->
+  <div class="slide" id="slide9">
+    <div class="bg-video-wrap"><video autoplay muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260319_055001_8e16d972-3b2b-441c-86ad-2901a54682f9.mp4"></video></div>
+    <div class="bg-overlay"></div>
+    <div style="position:relative;z-index:10;width:100%;max-width:72rem;padding:0 1.5rem;margin:auto;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;">
+        <div class="glass slide-el" style="border-radius:1.5rem;padding:2.5rem;">
+          <span class="font-body" style="color:var(--gold);font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;display:block;margin-bottom:1rem;">CASE STUDY 03</span>
+          <h2 class="font-display" style="font-size:2.2rem;font-weight:700;color:#fff;margin-bottom:1.5rem;">🎤 Friend's Bad Performance</h2>
+          <p class="font-body" style="color:rgba(200,200,200,0.9);font-size:1rem;line-height:1.7;margin-bottom:2rem;">Your friend gives a poor presentation and asks, "Was it good?"</p>
+          <div style="display:flex;flex-direction:column;gap:0.8rem;">
+            <button onclick="revealCaseVerdict(3)" class="glass hover-target" style="width:100%;text-align:left;border-radius:0.8rem;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;color:rgba(220,220,220,0.9);font-size:0.95rem;pointer-events:auto;cursor:pointer!important;position:relative;z-index:20;"><span>🗡️ Say "It was terrible"</span><span style="color:var(--gold);font-size:0.6rem;font-family:monospace;">A</span></button>
+            <button onclick="revealCaseVerdict(3)" class="glass hover-target" style="width:100%;text-align:left;border-radius:0.8rem;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;color:rgba(220,220,220,0.9);font-size:0.95rem;pointer-events:auto;cursor:pointer!important;position:relative;z-index:20;"><span>🤝 Give honest but kind feedback</span><span style="color:var(--gold);font-size:0.6rem;font-family:monospace;">B</span></button>
+          </div>
+        </div>
+        <div id="verdict-container-3" class="glass slide-el" style="border-radius:1.5rem;padding:2.5rem;opacity:0;transform:translateX(40px);transition:all 0.7s cubic-bezier(0.4,0,0.2,1);border-left:4px solid var(--gold);">
+          <span class="font-body" style="color:var(--gold);font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;display:block;margin-bottom:1rem;">VERDICT</span>
+          <h3 class="font-display" style="font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:1rem;">Truth Without Cruelty</h3>
+          <p class="font-body" style="color:rgba(200,200,200,0.85);font-size:0.95rem;line-height:1.7;">Truth without kindness can become cruelty. Ethical honesty should help improvement, not humiliate.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 10: CASE 4 — AI Assignment ===== -->
+  <div class="slide" id="slide10">
+    <div class="bg-video-wrap"><video autoplay muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260604_125109_19424216-4e2a-4560-b9f2-f1b5f6eb2c2e.mp4"></video></div>
+    <div class="bg-overlay"></div>
+    <div style="position:relative;z-index:10;width:100%;max-width:72rem;padding:0 1.5rem;margin:auto;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;">
+        <div class="glass slide-el" style="border-radius:1.5rem;padding:2.5rem;">
+          <span class="font-body" style="color:var(--gold);font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;display:block;margin-bottom:1rem;">CASE STUDY 04</span>
+          <h2 class="font-display" style="font-size:2.2rem;font-weight:700;color:#fff;margin-bottom:1.5rem;">🤖 AI Assignment</h2>
+          <p class="font-body" style="color:rgba(200,200,200,0.9);font-size:1rem;line-height:1.7;margin-bottom:2rem;">A student uses AI to write most of an assignment and submits it as fully original work.</p>
+          <div style="display:flex;flex-direction:column;gap:0.8rem;">
+            <button onclick="revealCaseVerdict(4)" class="glass hover-target" style="width:100%;text-align:left;border-radius:0.8rem;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;color:rgba(220,220,220,0.9);font-size:0.95rem;pointer-events:auto;cursor:pointer!important;position:relative;z-index:20;"><span>🙈 Hide AI use</span><span style="color:var(--gold);font-size:0.6rem;font-family:monospace;">A</span></button>
+            <button onclick="revealCaseVerdict(4)" class="glass hover-target" style="width:100%;text-align:left;border-radius:0.8rem;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;color:rgba(220,220,220,0.9);font-size:0.95rem;pointer-events:auto;cursor:pointer!important;position:relative;z-index:20;"><span>✋ Disclose AI assistance</span><span style="color:var(--gold);font-size:0.6rem;font-family:monospace;">B</span></button>
+          </div>
+        </div>
+        <div id="verdict-container-4" class="glass slide-el" style="border-radius:1.5rem;padding:2.5rem;opacity:0;transform:translateX(40px);transition:all 0.7s cubic-bezier(0.4,0,0.2,1);border-left:4px solid var(--gold);">
+          <span class="font-body" style="color:var(--gold);font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;display:block;margin-bottom:1rem;">VERDICT</span>
+          <h3 class="font-display" style="font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:1rem;">Academic Integrity</h3>
+          <p class="font-body" style="color:rgba(200,200,200,0.85);font-size:0.95rem;line-height:1.7;">Here dishonesty gives unfair advantage. Unlike protective lying, this lie is selfish and damages academic trust.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 11: CASE 5 — Engineering Defect ===== -->
+  <div class="slide" id="slide11">
+    <div class="bg-video-wrap"><video autoplay muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260520_133010_cb9c806d-bc9d-47f1-ac4c-b1759134ec8b.mp4"></video></div>
+    <div class="bg-overlay"></div>
+    <div style="position:relative;z-index:10;width:100%;max-width:72rem;padding:0 1.5rem;margin:auto;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;">
+        <div class="glass slide-el" style="border-radius:1.5rem;padding:2.5rem;">
+          <span class="font-body" style="color:var(--gold);font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;display:block;margin-bottom:1rem;">CASE STUDY 05</span>
+          <h2 class="font-display" style="font-size:2.2rem;font-weight:700;color:#fff;margin-bottom:1.5rem;">⚙️ Engineering Defect</h2>
+          <p class="font-body" style="color:rgba(200,200,200,0.9);font-size:1rem;line-height:1.7;margin-bottom:2rem;">An engineer notices a small design defect before product launch. Reporting it may delay the project and anger the company.</p>
+          <div style="display:flex;flex-direction:column;gap:0.8rem;">
+            <button onclick="revealCaseVerdict(5)" class="glass hover-target" style="width:100%;text-align:left;border-radius:0.8rem;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;color:rgba(220,220,220,0.9);font-size:0.95rem;pointer-events:auto;cursor:pointer!important;position:relative;z-index:20;"><span>🤫 Hide it to protect the deadline</span><span style="color:var(--gold);font-size:0.6rem;font-family:monospace;">A</span></button>
+            <button onclick="revealCaseVerdict(5)" class="glass hover-target" style="width:100%;text-align:left;border-radius:0.8rem;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;color:rgba(220,220,220,0.9);font-size:0.95rem;pointer-events:auto;cursor:pointer!important;position:relative;z-index:20;"><span>📢 Report it honestly</span><span style="color:var(--gold);font-size:0.6rem;font-family:monospace;">B</span></button>
+          </div>
+        </div>
+        <div id="verdict-container-5" class="glass slide-el" style="border-radius:1.5rem;padding:2.5rem;opacity:0;transform:translateX(40px);transition:all 0.7s cubic-bezier(0.4,0,0.2,1);border-left:4px solid var(--gold);">
+          <span class="font-body" style="color:var(--gold);font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;display:block;margin-bottom:1rem;">VERDICT</span>
+          <h3 class="font-display" style="font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:1rem;">Lives Over Deadlines</h3>
+          <p class="font-body" style="color:rgba(200,200,200,0.85);font-size:0.95rem;line-height:1.7;">In engineering, dishonesty can cost lives. Public safety must come before reputation, profit, or deadlines.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 12: CASE 6 — Lost Wallet ===== -->
+  <div class="slide" id="slide12">
+    <div class="bg-video-wrap"><video autoplay muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_080021_d598092b-c4c2-4e53-8e46-94cf9064cd50.mp4"></video></div>
+    <div class="bg-overlay"></div>
+    <div style="position:relative;z-index:10;width:100%;max-width:72rem;padding:0 1.5rem;margin:auto;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;">
+        <div class="glass slide-el" style="border-radius:1.5rem;padding:2.5rem;">
+          <span class="font-body" style="color:var(--gold);font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;display:block;margin-bottom:1rem;">CASE STUDY 06</span>
+          <h2 class="font-display" style="font-size:2.2rem;font-weight:700;color:#fff;margin-bottom:1.5rem;">👛 Lost Wallet</h2>
+          <p class="font-body" style="color:rgba(200,200,200,0.9);font-size:1rem;line-height:1.7;margin-bottom:2rem;">You find a wallet with money and ID card in college.</p>
+          <div style="display:flex;flex-direction:column;gap:0.8rem;">
+            <button onclick="revealCaseVerdict(6)" class="glass hover-target" style="width:100%;text-align:left;border-radius:0.8rem;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;color:rgba(220,220,220,0.9);font-size:0.95rem;pointer-events:auto;cursor:pointer!important;position:relative;z-index:20;"><span>💰 Keep the money</span><span style="color:var(--gold);font-size:0.6rem;font-family:monospace;">A</span></button>
+            <button onclick="revealCaseVerdict(6)" class="glass hover-target" style="width:100%;text-align:left;border-radius:0.8rem;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;color:rgba(220,220,220,0.9);font-size:0.95rem;pointer-events:auto;cursor:pointer!important;position:relative;z-index:20;"><span>🤲 Return it honestly</span><span style="color:var(--gold);font-size:0.6rem;font-family:monospace;">B</span></button>
+          </div>
+        </div>
+        <div id="verdict-container-6" class="glass slide-el" style="border-radius:1.5rem;padding:2.5rem;opacity:0;transform:translateX(40px);transition:all 0.7s cubic-bezier(0.4,0,0.2,1);border-left:4px solid var(--gold);">
+          <span class="font-body" style="color:var(--gold);font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;display:block;margin-bottom:1rem;">VERDICT</span>
+          <h3 class="font-display" style="font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:1rem;">Simple Honesty</h3>
+          <p class="font-body" style="color:rgba(200,200,200,0.85);font-size:0.95rem;line-height:1.7;">This is simple honesty. No ethical conflict exists because returning it protects trust and justice.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 13: CASE 7 — Surprise Party Lie ===== -->
+  <div class="slide" id="slide13">
+    <div class="bg-video-wrap"><video autoplay muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260406_133058_0504132a-0cf3-4450-a370-8ea3b05c95d4.mp4"></video></div>
+    <div class="bg-overlay"></div>
+    <div style="position:relative;z-index:10;width:100%;max-width:72rem;padding:0 1.5rem;margin:auto;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;">
+        <div class="glass slide-el" style="border-radius:1.5rem;padding:2.5rem;">
+          <span class="font-body" style="color:var(--gold);font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;display:block;margin-bottom:1rem;">CASE STUDY 07</span>
+          <h2 class="font-display" style="font-size:2.2rem;font-weight:700;color:#fff;margin-bottom:1.5rem;">🎉 Surprise Party Lie</h2>
+          <p class="font-body" style="color:rgba(200,200,200,0.9);font-size:1rem;line-height:1.7;margin-bottom:2rem;">Your friend asks why everyone is acting strange, but they are planning a surprise birthday party.</p>
+          <div style="display:flex;flex-direction:column;gap:0.8rem;">
+            <button onclick="revealCaseVerdict(7)" class="glass hover-target" style="width:100%;text-align:left;border-radius:0.8rem;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;color:rgba(220,220,220,0.9);font-size:0.95rem;pointer-events:auto;cursor:pointer!important;position:relative;z-index:20;"><span>😐 Reveal the truth</span><span style="color:var(--gold);font-size:0.6rem;font-family:monospace;">A</span></button>
+            <button onclick="revealCaseVerdict(7)" class="glass hover-target" style="width:100%;text-align:left;border-radius:0.8rem;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;color:rgba(220,220,220,0.9);font-size:0.95rem;pointer-events:auto;cursor:pointer!important;position:relative;z-index:20;"><span>🎊 Tell a harmless temporary lie</span><span style="color:var(--gold);font-size:0.6rem;font-family:monospace;">B</span></button>
+          </div>
+        </div>
+        <div id="verdict-container-7" class="glass slide-el" style="border-radius:1.5rem;padding:2.5rem;opacity:0;transform:translateX(40px);transition:all 0.7s cubic-bezier(0.4,0,0.2,1);border-left:4px solid var(--gold);">
+          <span class="font-body" style="color:var(--gold);font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;display:block;margin-bottom:1rem;">VERDICT</span>
+          <h3 class="font-display" style="font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:1rem;">Preserving Joy</h3>
+          <p class="font-body" style="color:rgba(200,200,200,0.85);font-size:0.95rem;line-height:1.7;">This lie does not exploit or harm. It preserves joy. But even harmless lies depend on intention and context.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 14: CASE 8 — Job Interview Exaggeration ===== -->
+  <div class="slide" id="slide14">
+    <div class="bg-video-wrap"><video autoplay muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260325_094440_a3592600-bd1e-49e5-9bce-a73662061d83.mp4"></video></div>
+    <div class="bg-overlay"></div>
+    <div style="position:relative;z-index:10;width:100%;max-width:72rem;padding:0 1.5rem;margin:auto;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;">
+        <div class="glass slide-el" style="border-radius:1.5rem;padding:2.5rem;">
+          <span class="font-body" style="color:var(--gold);font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;display:block;margin-bottom:1rem;">CASE STUDY 08</span>
+          <h2 class="font-display" style="font-size:2.2rem;font-weight:700;color:#fff;margin-bottom:1.5rem;">💼 Job Interview Exaggeration</h2>
+          <p class="font-body" style="color:rgba(200,200,200,0.9);font-size:1rem;line-height:1.7;margin-bottom:2rem;">A fresher exaggerates skills in an interview to get their first opportunity.</p>
+          <div style="display:flex;flex-direction:column;gap:0.8rem;">
+            <button onclick="revealCaseVerdict(8)" class="glass hover-target" style="width:100%;text-align:left;border-radius:0.8rem;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;color:rgba(220,220,220,0.9);font-size:0.95rem;pointer-events:auto;cursor:pointer!important;position:relative;z-index:20;"><span>📈 Exaggerate to survive competition</span><span style="color:var(--gold);font-size:0.6rem;font-family:monospace;">A</span></button>
+            <button onclick="revealCaseVerdict(8)" class="glass hover-target" style="width:100%;text-align:left;border-radius:0.8rem;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;color:rgba(220,220,220,0.9);font-size:0.95rem;pointer-events:auto;cursor:pointer!important;position:relative;z-index:20;"><span>🎯 Be honest about skills & willingness to learn</span><span style="color:var(--gold);font-size:0.6rem;font-family:monospace;">B</span></button>
+          </div>
+        </div>
+        <div id="verdict-container-8" class="glass slide-el" style="border-radius:1.5rem;padding:2.5rem;opacity:0;transform:translateX(40px);transition:all 0.7s cubic-bezier(0.4,0,0.2,1);border-left:4px solid var(--gold);">
+          <span class="font-body" style="color:var(--gold);font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;display:block;margin-bottom:1rem;">VERDICT</span>
+          <h3 class="font-display" style="font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:1rem;">Trust is Foundation</h3>
+          <p class="font-body" style="color:rgba(200,200,200,0.85);font-size:0.95rem;line-height:1.7;">This lie may look small, but it breaks professional trust. Honesty with confidence is better than fake competence.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 15: COMPARISON ===== -->
+  <div class="slide" id="slide15">
+    <div class="bg-video-wrap"><video autoplay muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260307_083826_e938b29f-a43a-41ec-a153-3d4730578ab8.mp4"></video></div>
+    <div class="bg-overlay"></div>
+    <div style="position:relative;z-index:10;width:100%;max-width:76rem;padding:0 1.5rem;margin:auto;">
+      <h2 class="font-display slide-el" style="font-size:clamp(2.5rem,5vw,3.5rem);font-weight:700;text-align:center;margin-bottom:3rem;">Not All Truths & Lies Are <span class="gold-text">Equal</span></h2>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;">
+        <div class="glass hover-target tilt-card slide-el" style="border-radius:1.5rem;padding:2rem;border-top:4px solid #22c55e;"><div class="tilt-inner"><h3 class="font-display" style="font-size:1.3rem;color:#22c55e;margin-bottom:1.2rem;">Good Honesty</h3><ul class="font-body" style="color:rgba(200,200,200,0.9);font-size:0.9rem;list-style:none;line-height:2;">✓ Truthful & Kind<br>✓ Responsible<br>✓ Protects trust</ul></div></div>
+        <div class="glass hover-target tilt-card slide-el" style="border-radius:1.5rem;padding:2rem;border-top:4px solid #f97316;"><div class="tilt-inner"><h3 class="font-display" style="font-size:1.3rem;color:#f97316;margin-bottom:1.2rem;">Bad Honesty</h3><ul class="font-body" style="color:rgba(200,200,200,0.9);font-size:0.9rem;list-style:none;line-height:2;">✗ Brutally hurts<br>✗ Used to insult<br>✗ Ignores context</ul></div></div>
+        <div class="glass hover-target tilt-card slide-el" style="border-radius:1.5rem;padding:2rem;border-top:4px solid #3b82f6;"><div class="tilt-inner"><h3 class="font-display" style="font-size:1.3rem;color:#3b82f6;margin-bottom:1.2rem;">Good Lie</h3><ul class="font-body" style="color:rgba(200,200,200,0.9);font-size:0.9rem;list-style:none;line-height:2;">✓ Protects innocent<br>✓ Prevents harm<br>✓ Selfless motive</ul></div></div>
+        <div class="glass hover-target tilt-card slide-el" style="border-radius:1.5rem;padding:2rem;border-top:4px solid #ef4444;"><div class="tilt-inner"><h3 class="font-display" style="font-size:1.3rem;color:#ef4444;margin-bottom:1.2rem;">Bad Lie</h3><ul class="font-body" style="color:rgba(200,200,200,0.9);font-size:0.9rem;list-style:none;line-height:2;">✗ Selfish<br>✗ Manipulative<br>✗ Covers mistakes</ul></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 16: FRAMEWORK ===== -->
+  <div class="slide" id="slide16">
+    <div class="bg-video-wrap"><video autoplay muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260525_052706_d2e390fd-1846-4fe7-a4d8-8d2f1c875358.mp4"></video></div>
+    <div class="bg-overlay"></div>
+    <div style="position:relative;z-index:10;max-width:52rem;padding:0 1.5rem;margin:auto;width:100%;">
+      <h2 class="font-display slide-el" style="font-size:clamp(2rem,4.5vw,3rem);font-weight:700;text-align:center;margin-bottom:2.5rem;">Before You Act: Ask <span class="gold-text">5 Questions</span></h2>
+      <div style="display:flex;flex-direction:column;gap:0.8rem;">
+        <div class="glass hover-target tilt-card slide-el" style="border-radius:1rem;padding:1.2rem 1.5rem;display:flex;gap:1.5rem;align-items:center;"><div class="tilt-inner" style="display:flex;gap:1.5rem;align-items:center;width:100%;"><span class="gold-text font-display" style="font-size:1.8rem;font-weight:700;opacity:0.7;">01</span><div><p style="color:#fff;font-size:1.1rem;font-weight:600;margin-bottom:0.2rem;">What is my intention?</p><p class="font-body" style="color:rgba(160,160,160,0.9);font-size:0.8rem;">Am I seeking truth for its own sake, or weaponizing it?</p></div></div></div>
+        <div class="glass hover-target tilt-card slide-el" style="border-radius:1rem;padding:1.2rem 1.5rem;display:flex;gap:1.5rem;align-items:center;"><div class="tilt-inner" style="display:flex;gap:1.5rem;align-items:center;width:100%;"><span class="gold-text font-display" style="font-size:1.8rem;font-weight:700;opacity:0.7;">02</span><div><p style="color:#fff;font-size:1.1rem;font-weight:600;margin-bottom:0.2rem;">Who will be helped?</p><p class="font-body" style="color:rgba(160,160,160,0.9);font-size:0.8rem;">Does this serve well-being or just ego?</p></div></div></div>
+        <div class="glass hover-target tilt-card slide-el" style="border-radius:1rem;padding:1.2rem 1.5rem;display:flex;gap:1.5rem;align-items:center;"><div class="tilt-inner" style="display:flex;gap:1.5rem;align-items:center;width:100%;"><span class="gold-text font-display" style="font-size:1.8rem;font-weight:700;opacity:0.7;">03</span><div><p style="color:#fff;font-size:1.1rem;font-weight:600;margin-bottom:0.2rem;">Who may be harmed?</p><p class="font-body" style="color:rgba(160,160,160,0.9);font-size:0.8rem;">Consider the ripple effects of your words.</p></div></div></div>
+        <div class="glass hover-target tilt-card slide-el" style="border-radius:1rem;padding:1.2rem 1.5rem;display:flex;gap:1.5rem;align-items:center;"><div class="tilt-inner" style="display:flex;gap:1.5rem;align-items:center;width:100%;"><span class="gold-text font-display" style="font-size:1.8rem;font-weight:700;opacity:0.7;">04</span><div><p style="color:#fff;font-size:1.1rem;font-weight:600;margin-bottom:0.2rem;">Am I protecting someone or myself?</p><p class="font-body" style="color:rgba(160,160,160,0.9);font-size:0.8rem;">Selfless protection vs self-preservation.</p></div></div></div>
+        <div class="glass hover-target tilt-card slide-el" style="border-radius:1rem;padding:1.2rem 1.5rem;display:flex;gap:1.5rem;align-items:center;"><div class="tilt-inner" style="display:flex;gap:1.5rem;align-items:center;width:100%;"><span class="gold-text font-display" style="font-size:1.8rem;font-weight:700;opacity:0.7;">05</span><div><p style="color:#fff;font-size:1.1rem;font-weight:600;margin-bottom:0.2rem;">Will this destroy trust later?</p><p class="font-body" style="color:rgba(160,160,160,0.9);font-size:0.8rem;">If revealed, will people understand or feel betrayed?</p></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 17: FINAL VERDICT ===== -->
+  <div class="slide" id="slide17">
+    <div class="bg-video-wrap"><video autoplay muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_080203_fd7f4f85-3a86-4837-8192-85e7bfe68e75.mp4"></video></div>
+    <div class="bg-overlay"></div>
+    <div style="position:relative;z-index:10;max-width:60rem;padding:0 1.5rem;margin:auto;text-align:center;">
+      <p class="slide-el" style="color:var(--gold);font-size:0.7rem;letter-spacing:0.5em;text-transform:uppercase;margin-bottom:3rem;">Final Verdict</p>
+      <p class="font-display slide-el" style="font-size:clamp(2rem,5vw,3.2rem);font-weight:700;line-height:1.35;color:#fff;margin-bottom:3rem;">
+        "Honesty is not merely saying facts.<br>
+        <span class="gold-text gold-glow">Honesty is truth guided by responsibility,<br>compassion, and good intention.</span>"
+      </p>
+      <div class="slide-el" style="width:6rem;height:1px;background:rgba(212,175,55,0.25);margin:0 auto 3rem;"></div>
+      <p class="font-elegant slide-el" style="font-size:1.6rem;color:rgba(220,220,220,0.85);font-style:italic;line-height:1.7;margin-bottom:4rem;">
+        Truth without kindness can wound.<br>
+        Kindness without truth can mislead.<br>
+        Ethics begins when we learn to balance both.
+      </p>
+      <div class="glass hover-target pulse-border slide-el" style="border-radius:1.5rem;display:inline-block;padding:2rem 3.5rem;">
+        <p class="gold-text font-display" style="font-size:1.8rem;font-weight:700;letter-spacing:0.1em;margin-bottom:0.5rem;margin-top:0.5rem;">Thank You</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// =============================================
+// FLOATING PARTICLES
+// =============================================
+(function(){
+  const container = document.getElementById('particles');
+  for(let i = 0; i < 35; i++){
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    const size = Math.random() * 4 + 1;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+    p.style.animationDelay = (Math.random() * 15) + 's';
+    container.appendChild(p);
+  }
+})();
+
+// =============================================
+// CUSTOM CURSOR
+// =============================================
+const dot = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = innerWidth/2, my = innerHeight/2, rx = mx, ry = my;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.left = mx+'px'; dot.style.top = my+'px';
+});
+(function cursorLoop(){
+  rx += (mx-rx)*0.12; ry += (my-ry)*0.12;
+  ring.style.left = rx+'px'; ring.style.top = ry+'px';
+  requestAnimationFrame(cursorLoop);
+})();
+document.querySelectorAll('.hover-target').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('hover-active'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('hover-active'));
+});
+
+// =============================================
+// TILT EFFECT
+// =============================================
+document.querySelectorAll('.tilt-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = e.clientX-r.left, y = e.clientY-r.top;
+    const cx = r.width/2, cy = r.height/2;
+    card.style.transform = `perspective(800px) rotateX(${((y-cy)/cy)*-8}deg) rotateY(${((x-cx)/cx)*8}deg) scale3d(1.03,1.03,1.03)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) scale3d(1,1,1)';
+  });
+});
+
+// =============================================
+// CASE VERDICT REVEAL
+// =============================================
+window.revealCaseVerdict = function(n){
+  const v = document.getElementById('verdict-container-'+n);
+  if(v && v.style.opacity !== '1'){
+    v.style.opacity='1'; v.style.transform='translateX(0)';
+    gsap.fromTo(v, {scale:0.92}, {scale:1, duration:0.5, ease:'back.out(1.7)'});
+  }
+};
+
+// =============================================
+// BURN/SHATTER TRANSITION (Enhanced with sparks)
+// =============================================
+const tCanvas = document.getElementById('transition-canvas');
+const tCtx = tCanvas.getContext('2d');
+function resizeCanvas(){ tCanvas.width=innerWidth; tCanvas.height=innerHeight; }
+addEventListener('resize', resizeCanvas); resizeCanvas();
+
+// Spark particles for extra drama
+class Spark {
+  constructor(x,y){
+    this.x=x; this.y=y;
+    this.vx=(Math.random()-0.5)*8; this.vy=(Math.random()-0.5)*8-3;
+    this.life=1; this.decay=Math.random()*0.03+0.02;
+    this.size=Math.random()*3+1;
+    this.color = Math.random()>0.5 ? '#f59e0b' : '#ef4444';
+  }
+  update(){ this.x+=this.vx; this.y+=this.vy; this.vy+=0.15; this.life-=this.decay; }
+  draw(ctx){
+    if(this.life<=0) return;
+    ctx.globalAlpha=this.life;
+    ctx.fillStyle=this.color;
+    ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha=1;
+  }
+}
+
+function triggerBurnTransition(callback){
+  tCanvas.style.display='block';
+  const W=tCanvas.width, H=tCanvas.height, cx=W/2, cy=H/2;
+  const maxR=Math.sqrt(cx*cx+cy*cy)+60;
+  const duration=1100, start=performance.now();
+  let done=false, sparks=[];
+
+  function frame(now){
+    const t=Math.min((now-start)/duration,1);
+    tCtx.clearRect(0,0,W,H);
+
+    // Black paper
+    tCtx.fillStyle='#030303'; tCtx.fillRect(0,0,W,H);
+
+    // Burn hole (destination-out)
+    tCtx.globalCompositeOperation='destination-out';
+    const R = t*maxR;
+    const pts=90;
+    tCtx.beginPath();
+    for(let i=0;i<=pts;i++){
+      const a=(i/pts)*Math.PI*2;
+      const n=(Math.sin(a*14+t*12)*12+Math.cos(a*9+t*6)*8)*Math.max(0,1-t);
+      const r=R+n;
+      const x=cx+Math.cos(a)*r, y=cy+Math.sin(a)*r;
+      i===0?tCtx.moveTo(x,y):tCtx.lineTo(x,y);
+    }
+    tCtx.fill();
+
+    tCtx.globalCompositeOperation='source-over';
+
+    // Fire edge
+    if(t>0 && t<1){
+      tCtx.beginPath();
+      for(let i=0;i<=pts;i++){
+        const a=(i/pts)*Math.PI*2;
+        const n=(Math.sin(a*14+t*12)*12+Math.cos(a*9+t*6)*8)*Math.max(0,1-t);
+        const r=R+n;
+        const x=cx+Math.cos(a)*r, y=cy+Math.sin(a)*r;
+        i===0?tCtx.moveTo(x,y):tCtx.lineTo(x,y);
+        // Spawn sparks at the burning edge
+        if(Math.random()<0.15) sparks.push(new Spark(x,y));
+      }
+      tCtx.lineWidth=18*(1-t)+2; tCtx.strokeStyle='#dc2626'; tCtx.stroke();
+      tCtx.beginPath();
+      for(let i=0;i<=pts;i++){
+        const a=(i/pts)*Math.PI*2;
+        const n=(Math.sin(a*14+t*12)*12+Math.cos(a*9+t*6)*8)*Math.max(0,1-t);
+        const r=R-5+n;
+        const x=cx+Math.cos(a)*r, y=cy+Math.sin(a)*r;
+        i===0?tCtx.moveTo(x,y):tCtx.lineTo(x,y);
+      }
+      tCtx.lineWidth=6*(1-t)+1; tCtx.strokeStyle='#fbbf24'; tCtx.stroke();
+
+      // Inner glow
+      const grd=tCtx.createRadialGradient(cx,cy,R*0.3,cx,cy,R);
+      grd.addColorStop(0,'rgba(251,191,36,0)');
+      grd.addColorStop(0.8,'rgba(251,191,36,0)');
+      grd.addColorStop(1,'rgba(251,191,36,0.08)');
+      tCtx.fillStyle=grd; tCtx.fillRect(0,0,W,H);
+    }
+
+    // Draw & update sparks
+    sparks.forEach(s=>{ s.update(); s.draw(tCtx); });
+    sparks=sparks.filter(s=>s.life>0);
+
+    if(t>=0.4 && !done){ callback(); done=true; }
+    if(t<1) requestAnimationFrame(frame);
+    else { tCanvas.style.display='none'; tCtx.clearRect(0,0,W,H); }
+  }
+  requestAnimationFrame(frame);
+}
+
+// =============================================
+// FORCE VIDEO PLAYBACK (robust)
+// =============================================
+function forcePlayVideo(slide){
+  const vid = slide.querySelector('.bg-video-wrap video');
+  if(!vid) return;
+  if (!vid.src && vid.dataset.src) {
+    vid.src = vid.dataset.src;
+    vid.load();
+  }
+  vid.muted = true;
+  vid.playsInline = true;
+  vid.loop = true;
+  const playPromise = vid.play();
+  if(playPromise) {
+    playPromise.catch(()=>{
+      // Browser might block it, try again later
+      setTimeout(()=>{ vid.play().catch(()=>{}); }, 200);
+    });
+  }
+}
+function pauseVideo(slide){
+  const vid = slide.querySelector('.bg-video-wrap video');
+  if(vid) {
+    vid.pause();
+    vid.removeAttribute('src');
+    vid.load();
+  }
+}
+
+// Ensure active slide video plays on load
+window.addEventListener('DOMContentLoaded', ()=>{
+  forcePlayVideo(document.querySelector('.slide.active'));
+});
+window.addEventListener('load', ()=>{
+  forcePlayVideo(document.querySelector('.slide.active'));
+});
+
+// Single fallback for the active slide on first interaction
+document.body.addEventListener('click', function firstClick(){
+  forcePlayVideo(document.querySelector('.slide.active'));
+  document.body.removeEventListener('click', firstClick);
+}, {once: true});
+
+// =============================================
+// SLIDE NAVIGATION
+// =============================================
+let cur=0, animating=false;
+const slides=document.querySelectorAll('.slide');
+const total=slides.length;
+const prevBtn=document.getElementById('prevBtn');
+const nextBtn=document.getElementById('nextBtn');
+const counter=document.getElementById('slideCounter');
+const progBar=document.getElementById('slideProgress');
+
+function updateUI(){
+  prevBtn.style.display=cur===0?'none':'flex';
+  nextBtn.style.display=cur===total-1?'none':'flex';
+  counter.innerText=String(cur+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');
+  progBar.style.width=((cur+1)/total*100)+'%';
+}
+
+function goTo(i){
+  if(i<0||i>=total||animating||i===cur) return;
+  animating=true;
+  const c=slides[cur], n=slides[i];
+
+  triggerBurnTransition(()=>{
+    pauseVideo(c);
+    c.classList.remove('active');
+    n.classList.add('active');
+    forcePlayVideo(n);
+
+    gsap.fromTo(n.querySelectorAll('.slide-el'),
+      {y:45, opacity:0},
+      {y:0, opacity:1, stagger:0.07, duration:0.7, ease:'power3.out'}
+    );
+    cur=i; updateUI();
+    setTimeout(()=>{ animating=false; }, 600);
+  });
+}
+
+function nextSlide(){ goTo(cur+1); }
+function prevSlide(){ goTo(cur-1); }
+
+document.addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight'||e.key===' '){ e.preventDefault(); nextSlide(); }
+  if(e.key==='ArrowLeft'){ e.preventDefault(); prevSlide(); }
+});
+
+let wt;
+document.addEventListener('wheel', e=>{
+  if(animating) return;
+  clearTimeout(wt);
+  wt=setTimeout(()=>{
+    if(e.deltaY>40) nextSlide();
+    else if(e.deltaY<-40) prevSlide();
+  }, 60);
+});
+
+// Initial entrance
+gsap.fromTo(slides[0].querySelectorAll('.slide-el'),
+  {y:50, opacity:0},
+  {y:0, opacity:1, stagger:0.1, duration:1.2, delay:0.4, ease:'power3.out'}
+);
+updateUI();
+
+// Ping animation
+const style=document.createElement('style');
+style.textContent=`@keyframes ping{75%,100%{transform:scale(2);opacity:0}}`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>
